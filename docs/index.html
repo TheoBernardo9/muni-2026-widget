@@ -1,1 +1,644 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Municipales 2026 — Têtes de liste (Tour 1)</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --text:#0b1220;
+      --muted:#526079;
+      --line:#e6e9ef;
+      --chip:#f3f6fb;
+      --chipText:#1a2a44;
+      --brand:#0b2a6f;
+      --brand2:#0a3aa6;
+      --shadow: 0 10px 30px rgba(11,18,32,.08);
+    }
 
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    body.embed .topbar { display:none; }
+    body.embed .wrap { padding-top: 0; }
+
+    .wrap{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 16px 22px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding: 10px 12px;
+      border:1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      background:#fff;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width: 240px;
+    }
+    .brand img{
+      height: 28px;
+      width:auto;
+      display:block;
+      border-radius: 6px;
+    }
+    .titleblock{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .titleblock .kicker{
+      font-size:12px;
+      color: var(--muted);
+      letter-spacing:.4px;
+    }
+    .titleblock h1{
+      margin:0;
+      font-size:16px;
+      line-height:1.2;
+      letter-spacing:.2px;
+    }
+
+    .meta-right{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--chip);
+      color: var(--chipText);
+      border: 1px solid #e9eef9;
+      font-size: 12px;
+      white-space:nowrap;
+    }
+    .dot{
+      width:8px;height:8px;border-radius:50%;
+      background: var(--brand2);
+      display:inline-block;
+    }
+
+    .searchArea{ margin-top: 12px; position:relative; }
+    .searchLabel{
+      font-size:13px;
+      color: var(--muted);
+      margin: 10px 0 8px;
+    }
+    .search{ position:relative; }
+    input{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border:1px solid var(--line);
+      font-size: 15px;
+      outline:none;
+      background:#fff;
+      box-shadow: var(--shadow);
+    }
+    input:focus{
+      border-color: rgba(10,58,166,.45);
+      box-shadow: 0 10px 30px rgba(10,58,166,.10);
+    }
+
+    .suggestions{
+      position:absolute;
+      top: 52px;
+      left:0; right:0;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      max-height: 360px;
+      overflow:auto;
+      z-index: 10;
+      display:none;
+    }
+    .suggestions button{
+      width:100%;
+      text-align:left;
+      padding: 10px 12px;
+      border:0;
+      background:#fff;
+      cursor:pointer;
+      font-size: 14px;
+    }
+    .suggestions button:hover{ background:#f6f8fc; }
+
+    .statusRow{ margin-top: 10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+    .loading{ margin-top: 10px; color: var(--muted); display:none; }
+    .error{ margin-top: 10px; color:#b00020; display:none; }
+
+    .resultHeader{
+      margin-top: 14px;
+      padding: 12px 12px;
+      border:1px solid var(--line);
+      border-radius: 14px;
+      background:#fff;
+      box-shadow: var(--shadow);
+      display:none;
+    }
+    .resultHeader .commune{
+      font-weight: 900;
+      font-size: 16px;
+      letter-spacing:.1px;
+    }
+    .resultHeader .sub{
+      margin-top:4px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .grid{
+      margin-top: 12px;
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    @media (max-width: 820px){
+      .grid{ grid-template-columns: 1fr; }
+      .brand{ min-width: 0; }
+    }
+
+    .card{
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px;
+      background:#fff;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+    }
+    .card::before{
+      content:"";
+      position:absolute;
+      left:0; top:0; bottom:0;
+      width:4px;
+      background: linear-gradient(180deg, var(--brand2), var(--brand));
+    }
+    .card:hover{
+      transform: translateY(-1px);
+      border-color: rgba(10,58,166,.30);
+      box-shadow: 0 16px 40px rgba(11,18,32,.10);
+    }
+
+    .cardTop{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom: 10px;
+    }
+
+    .badge{
+      font-size: 12px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(10,58,166,.25);
+      color: #fff;
+      background: linear-gradient(135deg, var(--brand2), var(--brand));
+      font-weight: 900;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+      white-space:nowrap;
+      box-shadow: 0 10px 20px rgba(10,58,166,.18);
+    }
+    .badge small{ opacity:.85; font-weight:800; letter-spacing:.3px; }
+
+    .listName{ font-size: 15px; font-weight: 900; margin:0; letter-spacing: .1px; }
+    .nuance{ margin-top: 6px; color: var(--muted); font-size: 12px; }
+
+    .head{
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .avatar{
+      width:34px;height:34px;border-radius: 10px;
+      background: linear-gradient(135deg, rgba(11,42,111,.12), rgba(10,58,166,.18));
+      border: 1px solid rgba(11,42,111,.15);
+      display:flex;align-items:center;justify-content:center;
+      font-weight: 900;
+      color: var(--brand);
+      flex:0 0 auto;
+    }
+    .headName{ font-size: 14px; font-weight: 900; margin:0; letter-spacing:.1px; }
+    .headRole{ color: var(--muted); font-size: 12px; margin-top:2px; }
+
+    details{
+      margin-top: 10px;
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+    }
+    summary{
+      cursor: pointer;
+      list-style: none;
+      font-weight: 800;
+      color: var(--brand2);
+      font-size: 13px;
+      user-select: none;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    summary::-webkit-details-marker{ display:none; }
+    .chev{
+      width: 10px; height: 10px;
+      border-right: 2px solid var(--brand2);
+      border-bottom: 2px solid var(--brand2);
+      transform: rotate(45deg);
+      transition: transform .12s ease;
+      flex: 0 0 auto;
+      margin-top: -2px;
+    }
+    details[open] .chev{ transform: rotate(225deg); margin-top: 2px; }
+
+    .candList{
+      margin-top: 10px;
+      max-height: 260px;
+      overflow:auto;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+    }
+    .candRow{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      padding: 8px 10px;
+      border-top: 1px solid #f0f2f6;
+      font-size: 13px;
+    }
+    .candRow:first-child{ border-top:0; }
+    .candLeft strong{ font-weight: 800; }
+    .candRight{ color: var(--muted); white-space:nowrap; font-size: 12px; }
+
+    .foot{
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 12px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .linkbtn{
+      border:0;
+      background:none;
+      color: var(--brand2);
+      text-decoration: underline;
+      cursor:pointer;
+      padding:0;
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/c6/8f/65/c68f650b-6467-673e-4990-22108f632b18/AppIcon-0-0-1x_U007epad-0-1-0-85-220.png/1200x630wa.jpg" alt="Logo" />
+        <div class="titleblock">
+          <div class="kicker">MUNICIPALES 2026</div>
+          <h1>Têtes de liste — Tour 1</h1>
+        </div>
+      </div>
+      <div class="meta-right">
+        <span class="chip"><span class="dot"></span><span id="status">Prêt</span></span>
+        <span class="chip" id="selected" style="display:none;"></span>
+      </div>
+    </div>
+
+    <div class="searchArea">
+      <div class="searchLabel">Rechercher une commune (Île-de-France)</div>
+      <div class="search">
+        <input id="q" type="text" placeholder="Ex : Paris (75), Montreuil (93), Versailles (78) …" autocomplete="off" />
+        <div id="sugg" class="suggestions"></div>
+      </div>
+
+      <div class="statusRow">
+        <span class="chip" id="hint">Saisissez au moins 2 caractères</span>
+      </div>
+
+      <div class="loading" id="loading">Chargement…</div>
+      <div class="error" id="error"></div>
+
+      <div id="header" class="resultHeader"></div>
+      <div id="result" class="grid"></div>
+
+      <div class="foot">
+        <div>Source : Ministère de l’Intérieur — export statique (IDF).</div>
+        <div><button class="linkbtn" id="clear">Effacer</button></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("embed") === "1") document.body.classList.add("embed");
+
+  // Fichiers statiques
+  const INDEX_URL = "./communes_idf.json";
+  const DATA_URL = (dpt) => `./data/${String(dpt).padStart(2,"0")}.json`;
+
+  const DEFAULT_Q = params.get("q") || "Paris";
+  const DEFAULT_DPT = Number(params.get("dpt") || "75");
+
+  const elQ = document.getElementById("q");
+  const elSugg = document.getElementById("sugg");
+  const elResult = document.getElementById("result");
+  const elHeader = document.getElementById("header");
+  const elLoading = document.getElementById("loading");
+  const elError = document.getElementById("error");
+  const elStatus = document.getElementById("status");
+  const elSelected = document.getElementById("selected");
+  const elHint = document.getElementById("hint");
+  const elClear = document.getElementById("clear");
+
+  let t = null;
+
+  // Cache en mémoire
+  let INDEX = null; // array
+  const DEPT_CACHE = new Map(); // dpt -> payload
+
+  function setStatus(s){ elStatus.textContent = s; }
+  function showError(msg){ elError.style.display="block"; elError.textContent = msg; }
+  function clearError(){ elError.style.display="none"; elError.textContent=""; }
+  function setLoading(v){ elLoading.style.display = v ? "block" : "none"; }
+
+  async function fetchJson(url){
+    const r = await fetch(url, { method:"GET" });
+    if(!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  }
+
+  function hideSuggestions(){
+    elSugg.style.display="none";
+    elSugg.innerHTML="";
+  }
+
+  function escapeHtml(s){
+    return String(s ?? "").replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
+  }
+
+  function initials(prenom, nom){
+    const p = (prenom||"").trim(); const n = (nom||"").trim();
+    const a = p ? p[0].toUpperCase() : "";
+    const b = n ? n[0].toUpperCase() : "";
+    return (a + b) || "TL";
+  }
+
+  function fullName(civ, prenom, nom){
+    return [civ, prenom, nom].filter(Boolean).map(x => String(x).trim()).filter(Boolean).join(" ");
+  }
+
+  function renderCandidats(candidats){
+    if(!candidats || !candidats.length){
+      return `<div class="candRow"><div class="candLeft muted">Aucun candidat listé.</div><div class="candRight"></div></div>`;
+    }
+    return candidats.map(p => {
+      const nom = `${escapeHtml(p.prenom || "")} ${escapeHtml(p.nom || "")}`.trim();
+      const ord = p.num_ord ? `#${escapeHtml(p.num_ord)}` : "";
+      const nuance = p.lib_nua ? escapeHtml(p.lib_nua) : "";
+      return `
+        <div class="candRow">
+          <div class="candLeft"><strong>${ord}</strong> ${nom}</div>
+          <div class="candRight">${nuance}</div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function renderSuggestions(items){
+    if(!items.length){ hideSuggestions(); return; }
+    elSugg.innerHTML = "";
+    items.forEach(it => {
+      const b = document.createElement("button");
+      b.type = "button";
+      const dpt = String(it.cod_dpt).padStart(2, "0");
+
+      // ✅ format sans espace parasite : "Paris (75) — Paris"
+      let label = `${it.lib_commune} (${dpt})`;
+      if (it.lib_dpt) label += ` — ${it.lib_dpt}`;
+
+      b.textContent = label;
+      b.addEventListener("click", () => {
+        hideSuggestions();
+        elQ.value = it.lib_commune;
+        loadCommune(it.commune_id, it.cod_dpt);
+      });
+      elSugg.appendChild(b);
+    });
+    elSugg.style.display = "block";
+  }
+
+  async function ensureIndex(){
+    if (INDEX) return INDEX;
+    setStatus("Chargement");
+    setLoading(true);
+    INDEX = await fetchJson(INDEX_URL);
+    setLoading(false);
+    setStatus("Prêt");
+    return INDEX;
+  }
+
+  async function ensureDept(dpt){
+    const key = Number(dpt);
+    if (DEPT_CACHE.has(key)) return DEPT_CACHE.get(key);
+    setStatus("Chargement");
+    setLoading(true);
+    const payload = await fetchJson(DATA_URL(key));
+    DEPT_CACHE.set(key, payload);
+    setLoading(false);
+    setStatus("Prêt");
+    return payload;
+  }
+
+  async function loadCommune(communeId, dpt){
+    clearError();
+    setStatus("Chargement");
+    setLoading(true);
+    elResult.innerHTML = "";
+    elHeader.style.display = "none";
+
+    try{
+      const payload = await ensureDept(dpt);
+      const entry = (payload.communes || {})[communeId];
+
+      if (!entry){
+        showError("Commune introuvable dans le fichier département.");
+        setStatus("Erreur");
+        return;
+      }
+
+      const dptStr = String(payload.cod_dpt).padStart(2,"0");
+      const label = entry.lib_subcom ? `${entry.lib_commune} — ${entry.lib_subcom}` : entry.lib_commune;
+
+      elSelected.style.display = "inline-flex";
+      elSelected.textContent = `${label} (${dptStr})`;
+
+      elHeader.style.display = "block";
+      elHeader.innerHTML = `
+        <div class="commune">${escapeHtml(label)} (${dptStr})</div>
+        <div class="sub">${escapeHtml(payload.lib_dpt || "")} — Tour 1 • Têtes de liste</div>
+      `;
+
+      const listes = entry.listes || [];
+      if(!listes.length){
+        elResult.innerHTML = `<div class="card" style="grid-column:1/-1;"><div class="muted">Aucune liste trouvée pour cette commune.</div></div>`;
+        setStatus("OK");
+        return;
+      }
+
+      elResult.innerHTML = listes.map(l => {
+        const tete = l.tete_liste || {};
+        const name = fullName(tete.civilite, tete.prenom, tete.nom);
+        const ini = initials(tete.prenom, tete.nom);
+        const nuance = l.lib_nua_liste ? `Nuance : ${escapeHtml(l.lib_nua_liste)}` : "";
+        const listName = l.nom_liste ? escapeHtml(l.nom_liste) : "Liste";
+        const candidatsHtml = renderCandidats(l.candidats || []);
+
+        return `
+          <div class="card">
+            <div class="cardTop">
+              <div>
+                <p class="listName">${listName}</p>
+                <div class="nuance">${nuance || "&nbsp;"}</div>
+              </div>
+              <div class="badge"><small>Liste</small> ${escapeHtml(l.num_liste)}</div>
+            </div>
+
+            <div class="head">
+              <div class="avatar">${escapeHtml(ini)}</div>
+              <div>
+                <p class="headName">${escapeHtml(name || "—")}</p>
+                <div class="headRole">Tête de liste</div>
+              </div>
+            </div>
+
+            <details>
+              <summary>
+                Voir tous les candidats
+                <span class="chev" aria-hidden="true"></span>
+              </summary>
+              <div class="candList">${candidatsHtml}</div>
+            </details>
+          </div>
+        `;
+      }).join("");
+
+      setStatus("OK");
+    }catch(e){
+      showError("Impossible de charger les fichiers statiques (index ou département).");
+      setStatus("Erreur");
+    }finally{
+      setLoading(false);
+    }
+  }
+
+  async function onType(){
+    const q = elQ.value.trim();
+    clearError();
+
+    if(q.length < 2){
+      hideSuggestions();
+      elHint.textContent = "Saisissez au moins 2 caractères";
+      setStatus("Prêt");
+      return;
+    }
+
+    setStatus("Recherche");
+    elHint.textContent = "Sélectionnez une commune";
+
+    try{
+      const idx = await ensureIndex();
+      const needle = q.toLowerCase();
+
+      // INDEX contient un champ "q" normalisé côté python, on fait une recherche tolérante
+      const nq = needle.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g," ").trim();
+
+      const hits = [];
+      for (const it of idx){
+        if (it.q && it.q.includes(nq)) hits.push(it);
+        if (hits.length >= 15) break;
+      }
+
+      renderSuggestions(hits);
+      setStatus(hits.length ? "Résultats" : "Aucun");
+    }catch(e){
+      hideSuggestions();
+      showError("Index indisponible.");
+      setStatus("Erreur");
+    }
+  }
+
+  elQ.addEventListener("input", () => {
+    if(t) clearTimeout(t);
+    t = setTimeout(onType, 180);
+  });
+
+  document.addEventListener("click", (e) => {
+    if(!elSugg.contains(e.target) && e.target !== elQ) hideSuggestions();
+  });
+
+  elClear.addEventListener("click", () => {
+    elQ.value = "";
+    hideSuggestions();
+    elResult.innerHTML = "";
+    elHeader.style.display = "none";
+    elSelected.style.display = "none";
+    clearError();
+    setStatus("Prêt");
+    elHint.textContent = "Saisissez au moins 2 caractères";
+    elQ.focus();
+  });
+
+  // Bootstrap : charge une commune par défaut via l'index, puis son département
+  (async function bootstrap(){
+    try{
+      await ensureIndex();
+      elQ.value = DEFAULT_Q;
+
+      const idx = INDEX || [];
+      const qLower = DEFAULT_Q.toLowerCase();
+      const pick =
+        idx.find(x => Number(x.cod_dpt) === DEFAULT_DPT && String(x.lib_commune||"").toLowerCase() === qLower)
+        || idx.find(x => Number(x.cod_dpt) === DEFAULT_DPT && String(x.lib_commune||"").toLowerCase().includes(qLower))
+        || idx[0];
+
+      if (pick){
+        await loadCommune(pick.commune_id, pick.cod_dpt);
+      }
+    }catch(e){
+      // manuel
+    }
+  })();
+</script>
+</body>
+</html>
