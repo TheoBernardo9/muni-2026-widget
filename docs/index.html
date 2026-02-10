@@ -24,13 +24,16 @@
       background: var(--bg);
       color: var(--text);
     }
+
+    body.embed .topbar { display:none; }
+    body.embed .wrap { padding-top: 0; }
+
     .wrap{
       max-width: 1100px;
       margin: 0 auto;
       padding: 14px 16px 22px;
     }
 
-    /* Header */
     .topbar{
       display:flex;
       align-items:center;
@@ -96,19 +99,13 @@
       display:inline-block;
     }
 
-    /* Search */
-    .searchArea{
-      margin-top: 12px;
-      position:relative;
-    }
+    .searchArea{ margin-top: 12px; position:relative; }
     .searchLabel{
       font-size:13px;
       color: var(--muted);
       margin: 10px 0 8px;
     }
-    .search{
-      position:relative;
-    }
+    .search{ position:relative; }
     input{
       width:100%;
       padding: 12px 12px;
@@ -123,6 +120,7 @@
       border-color: rgba(10,58,166,.45);
       box-shadow: 0 10px 30px rgba(10,58,166,.10);
     }
+
     .suggestions{
       position:absolute;
       top: 52px;
@@ -147,14 +145,7 @@
     }
     .suggestions button:hover{ background:#f6f8fc; }
 
-    /* Result */
-    .statusRow{
-      margin-top: 10px;
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
+    .statusRow{ margin-top: 10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
     .loading{ margin-top: 10px; color: var(--muted); display:none; }
     .error{ margin-top: 10px; color:#b00020; display:none; }
 
@@ -165,6 +156,7 @@
       border-radius: 14px;
       background:#fff;
       box-shadow: var(--shadow);
+      display:none;
     }
     .resultHeader .commune{
       font-weight: 900;
@@ -232,23 +224,10 @@
       white-space:nowrap;
       box-shadow: 0 10px 20px rgba(10,58,166,.18);
     }
-    .badge small{
-      opacity:.85;
-      font-weight:800;
-      letter-spacing:.3px;
-    }
+    .badge small{ opacity:.85; font-weight:800; letter-spacing:.3px; }
 
-    .listName{
-      font-size: 15px;
-      font-weight: 900;
-      margin:0;
-      letter-spacing: .1px;
-    }
-    .nuance{
-      margin-top: 6px;
-      color: var(--muted);
-      font-size: 12px;
-    }
+    .listName{ font-size: 15px; font-weight: 900; margin:0; letter-spacing: .1px; }
+    .nuance{ margin-top: 6px; color: var(--muted); font-size: 12px; }
 
     .head{
       margin-top: 10px;
@@ -267,19 +246,9 @@
       color: var(--brand);
       flex:0 0 auto;
     }
-    .headName{
-      font-size: 14px;
-      font-weight: 900;
-      margin:0;
-      letter-spacing:.1px;
-    }
-    .headRole{
-      color: var(--muted);
-      font-size: 12px;
-      margin-top:2px;
-    }
+    .headName{ font-size: 14px; font-weight: 900; margin:0; letter-spacing:.1px; }
+    .headRole{ color: var(--muted); font-size: 12px; margin-top:2px; }
 
-    /* Dropdown candidats */
     details{
       margin-top: 10px;
       border-top: 1px solid var(--line);
@@ -299,8 +268,7 @@
     }
     summary::-webkit-details-marker{ display:none; }
     .chev{
-      width: 10px;
-      height: 10px;
+      width: 10px; height: 10px;
       border-right: 2px solid var(--brand2);
       border-bottom: 2px solid var(--brand2);
       transform: rotate(45deg);
@@ -308,10 +276,8 @@
       flex: 0 0 auto;
       margin-top: -2px;
     }
-    details[open] .chev{
-      transform: rotate(225deg);
-      margin-top: 2px;
-    }
+    details[open] .chev{ transform: rotate(225deg); margin-top: 2px; }
+
     .candList{
       margin-top: 10px;
       max-height: 260px;
@@ -330,11 +296,7 @@
     }
     .candRow:first-child{ border-top:0; }
     .candLeft strong{ font-weight: 800; }
-    .candRight{
-      color: var(--muted);
-      white-space:nowrap;
-      font-size: 12px;
-    }
+    .candRight{ color: var(--muted); white-space:nowrap; font-size: 12px; }
 
     .foot{
       margin-top: 14px;
@@ -367,7 +329,6 @@
           <h1>Têtes de liste — Tour 1</h1>
         </div>
       </div>
-
       <div class="meta-right">
         <span class="chip"><span class="dot"></span><span id="status">Prêt</span></span>
         <span class="chip" id="selected" style="display:none;"></span>
@@ -375,9 +336,9 @@
     </div>
 
     <div class="searchArea">
-      <div class="searchLabel">Rechercher une commune</div>
+      <div class="searchLabel">Rechercher une commune (Île-de-France)</div>
       <div class="search">
-        <input id="q" type="text" placeholder="Ex : Paris (75), Lyon (69), Saint-Denis (93) …" autocomplete="off" />
+        <input id="q" type="text" placeholder="Ex : Paris (75), Montreuil (93), Versailles (78) …" autocomplete="off" />
         <div id="sugg" class="suggestions"></div>
       </div>
 
@@ -388,23 +349,26 @@
       <div class="loading" id="loading">Chargement…</div>
       <div class="error" id="error"></div>
 
-      <div id="header" class="resultHeader" style="display:none;"></div>
+      <div id="header" class="resultHeader"></div>
       <div id="result" class="grid"></div>
 
       <div class="foot">
-        <div>Source : Ministère de l'Intérieur</div>
+        <div>Source : Ministère de l’Intérieur — export statique (IDF).</div>
         <div><button class="linkbtn" id="clear">Effacer</button></div>
       </div>
     </div>
   </div>
 
 <script>
-  // En local : http://127.0.0.1:8000
-  // En prod : https://api.votremedia.fr/municipales-2026/t1
-  const API_BASE = "http://10.14.17.39:8000";
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("embed") === "1") document.body.classList.add("embed");
 
-  const DEFAULT_Q = "Paris";
-  const DEFAULT_DPT = 75;
+  // Fichiers statiques
+  const INDEX_URL = "./communes_idf.json";
+  const DATA_URL = (dpt) => `./data/${String(dpt).padStart(2,"0")}.json`;
+
+  const DEFAULT_Q = params.get("q") || "Paris";
+  const DEFAULT_DPT = Number(params.get("dpt") || "75");
 
   const elQ = document.getElementById("q");
   const elSugg = document.getElementById("sugg");
@@ -419,13 +383,17 @@
 
   let t = null;
 
+  // Cache en mémoire
+  let INDEX = null; // array
+  const DEPT_CACHE = new Map(); // dpt -> payload
+
   function setStatus(s){ elStatus.textContent = s; }
   function showError(msg){ elError.style.display="block"; elError.textContent = msg; }
   function clearError(){ elError.style.display="none"; elError.textContent=""; }
   function setLoading(v){ elLoading.style.display = v ? "block" : "none"; }
 
-  async function apiGet(path){
-    const r = await fetch(`${API_BASE}${path}`, { method:"GET" });
+  async function fetchJson(url){
+    const r = await fetch(url, { method:"GET" });
     if(!r.ok) throw new Error(`HTTP ${r.status}`);
     return r.json();
   }
@@ -435,41 +403,17 @@
     elSugg.innerHTML="";
   }
 
-  // ✅ Fix définitif : jamais d'espace avant ")"
-  // Format : "Paris (75)" puis éventuellement "— Paris"
-  function renderSuggestions(items){
-    if(!items.length){ hideSuggestions(); return; }
-    elSugg.innerHTML = "";
-    items.forEach(it => {
-      const b = document.createElement("button");
-      b.type = "button";
-      const dpt = String(it.cod_dpt).padStart(2, "0");
-      const dptLabel = (it.lib_dpt || "").trim();
-
-      let label = `${it.lib_commune} (${dpt})`;
-      if (dptLabel) label += ` — ${dptLabel}`;
-
-      b.textContent = label;
-
-      b.addEventListener("click", () => {
-        hideSuggestions();
-        elQ.value = it.lib_commune;
-        loadCommune(it.commune_id);
-      });
-      elSugg.appendChild(b);
-    });
-    elSugg.style.display = "block";
-  }
-
   function escapeHtml(s){
     return String(s ?? "").replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
   }
+
   function initials(prenom, nom){
     const p = (prenom||"").trim(); const n = (nom||"").trim();
     const a = p ? p[0].toUpperCase() : "";
     const b = n ? n[0].toUpperCase() : "";
     return (a + b) || "TL";
   }
+
   function fullName(civ, prenom, nom){
     return [civ, prenom, nom].filter(Boolean).map(x => String(x).trim()).filter(Boolean).join(" ");
   }
@@ -484,45 +428,94 @@
       const nuance = p.lib_nua ? escapeHtml(p.lib_nua) : "";
       return `
         <div class="candRow">
-          <div class="candLeft">
-            <strong>${ord}</strong> ${nom}
-          </div>
+          <div class="candLeft"><strong>${ord}</strong> ${nom}</div>
           <div class="candRight">${nuance}</div>
         </div>
       `;
     }).join("");
   }
 
-  async function loadCommune(communeId){
-    clearError();
-    setLoading(true);
+  function renderSuggestions(items){
+    if(!items.length){ hideSuggestions(); return; }
+    elSugg.innerHTML = "";
+    items.forEach(it => {
+      const b = document.createElement("button");
+      b.type = "button";
+      const dpt = String(it.cod_dpt).padStart(2, "0");
+
+      // ✅ format sans espace parasite : "Paris (75) — Paris"
+      let label = `${it.lib_commune} (${dpt})`;
+      if (it.lib_dpt) label += ` — ${it.lib_dpt}`;
+
+      b.textContent = label;
+      b.addEventListener("click", () => {
+        hideSuggestions();
+        elQ.value = it.lib_commune;
+        loadCommune(it.commune_id, it.cod_dpt);
+      });
+      elSugg.appendChild(b);
+    });
+    elSugg.style.display = "block";
+  }
+
+  async function ensureIndex(){
+    if (INDEX) return INDEX;
     setStatus("Chargement");
+    setLoading(true);
+    INDEX = await fetchJson(INDEX_URL);
+    setLoading(false);
+    setStatus("Prêt");
+    return INDEX;
+  }
+
+  async function ensureDept(dpt){
+    const key = Number(dpt);
+    if (DEPT_CACHE.has(key)) return DEPT_CACHE.get(key);
+    setStatus("Chargement");
+    setLoading(true);
+    const payload = await fetchJson(DATA_URL(key));
+    DEPT_CACHE.set(key, payload);
+    setLoading(false);
+    setStatus("Prêt");
+    return payload;
+  }
+
+  async function loadCommune(communeId, dpt){
+    clearError();
+    setStatus("Chargement");
+    setLoading(true);
     elResult.innerHTML = "";
     elHeader.style.display = "none";
 
     try{
-      const data = await apiGet(`/commune/${encodeURIComponent(communeId)}`);
-      const c = data.commune || {};
-      const dpt = String(c.cod_dpt ?? "").padStart(2,"0");
-      const label = c.lib_subcom ? `${c.lib_commune} — ${c.lib_subcom}` : (c.lib_commune || "");
+      const payload = await ensureDept(dpt);
+      const entry = (payload.communes || {})[communeId];
+
+      if (!entry){
+        showError("Commune introuvable dans le fichier département.");
+        setStatus("Erreur");
+        return;
+      }
+
+      const dptStr = String(payload.cod_dpt).padStart(2,"0");
+      const label = entry.lib_subcom ? `${entry.lib_commune} — ${entry.lib_subcom}` : entry.lib_commune;
 
       elSelected.style.display = "inline-flex";
-      elSelected.textContent = `${label} (${dpt})`;
+      elSelected.textContent = `${label} (${dptStr})`;
 
       elHeader.style.display = "block";
       elHeader.innerHTML = `
-        <div class="commune">${escapeHtml(label)} (${dpt})</div>
-        <div class="sub">${escapeHtml(c.lib_dpt || "")} — Tour 1 • Têtes de liste</div>
+        <div class="commune">${escapeHtml(label)} (${dptStr})</div>
+        <div class="sub">${escapeHtml(payload.lib_dpt || "")} — Tour 1 • Têtes de liste</div>
       `;
 
-      const listes = data.listes || [];
+      const listes = entry.listes || [];
       if(!listes.length){
         elResult.innerHTML = `<div class="card" style="grid-column:1/-1;"><div class="muted">Aucune liste trouvée pour cette commune.</div></div>`;
         setStatus("OK");
         return;
       }
 
-      // ✅ Têtes de liste + menu déroulant pour tous les candidats
       elResult.innerHTML = listes.map(l => {
         const tete = l.tete_liste || {};
         const name = fullName(tete.civilite, tete.prenom, tete.nom);
@@ -554,9 +547,7 @@
                 Voir tous les candidats
                 <span class="chev" aria-hidden="true"></span>
               </summary>
-              <div class="candList">
-                ${candidatsHtml}
-              </div>
+              <div class="candList">${candidatsHtml}</div>
             </details>
           </div>
         `;
@@ -564,7 +555,7 @@
 
       setStatus("OK");
     }catch(e){
-      showError("Impossible de charger les données (API indisponible ou commune introuvable).");
+      showError("Impossible de charger les fichiers statiques (index ou département).");
       setStatus("Erreur");
     }finally{
       setLoading(false);
@@ -584,13 +575,25 @@
 
     setStatus("Recherche");
     elHint.textContent = "Sélectionnez une commune";
+
     try{
-      const items = await apiGet(`/search?q=${encodeURIComponent(q)}&limit=15`);
-      renderSuggestions(items);
-      setStatus(items.length ? "Résultats" : "Aucun");
+      const idx = await ensureIndex();
+      const needle = q.toLowerCase();
+
+      // INDEX contient un champ "q" normalisé côté python, on fait une recherche tolérante
+      const nq = needle.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g," ").trim();
+
+      const hits = [];
+      for (const it of idx){
+        if (it.q && it.q.includes(nq)) hits.push(it);
+        if (hits.length >= 15) break;
+      }
+
+      renderSuggestions(hits);
+      setStatus(hits.length ? "Résultats" : "Aucun");
     }catch(e){
       hideSuggestions();
-      showError("Recherche indisponible (API).");
+      showError("Index indisponible.");
       setStatus("Erreur");
     }
   }
@@ -616,21 +619,24 @@
     elQ.focus();
   });
 
-  // Pré-sélection : Paris (75)
+  // Bootstrap : charge une commune par défaut via l'index, puis son département
   (async function bootstrap(){
     try{
+      await ensureIndex();
       elQ.value = DEFAULT_Q;
-      const items = await apiGet(`/search?q=${encodeURIComponent(DEFAULT_Q)}&limit=15`);
-      const pick = items.find(x =>
-        Number(x.cod_dpt) === DEFAULT_DPT &&
-        String(x.lib_commune || "").toLowerCase().includes("paris")
-      ) || items[0];
 
-      if(pick){
-        await loadCommune(pick.commune_id);
+      const idx = INDEX || [];
+      const qLower = DEFAULT_Q.toLowerCase();
+      const pick =
+        idx.find(x => Number(x.cod_dpt) === DEFAULT_DPT && String(x.lib_commune||"").toLowerCase() === qLower)
+        || idx.find(x => Number(x.cod_dpt) === DEFAULT_DPT && String(x.lib_commune||"").toLowerCase().includes(qLower))
+        || idx[0];
+
+      if (pick){
+        await loadCommune(pick.commune_id, pick.cod_dpt);
       }
     }catch(e){
-      // recherche manuelle si besoin
+      // manuel
     }
   })();
 </script>
